@@ -5,7 +5,7 @@
     --danger: #e74c3c;
     --success: #27ae60;
     --bg: #eef2f3;
-    --bubble-size: 24px;
+    --bubble-size: 26px;
 }
 
 body {
@@ -16,192 +16,199 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
 }
 
-/* --- CONTROL PANEL --- */
+/* --- CONTROL PANEL (UI) --- */
 .control-panel {
     background: white;
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     width: 100%;
-    max-width: 700px;
+    max-width: 800px;
     margin-bottom: 40px;
     border-top: 5px solid var(--accent);
 }
 
-.control-panel h1 { margin-top: 0; font-size: 20px; color: var(--primary); }
-
 .panel-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
     margin-bottom: 20px;
 }
 
-.control-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 5px; }
-.control-group.full-width { flex: 100%; }
-.control-group label { font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase; }
+.control-group { display: flex; flex-direction: column; gap: 5px; }
+.control-group label { font-size: 11px; font-weight: bold; color: #7f8c8d; text-transform: uppercase; }
 
 input, select {
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 14px;
 }
 
 .add-tools { display: flex; gap: 10px; }
-.add-tools select { flex: 2; }
-.add-tools input { flex: 1; }
 
 button {
     padding: 10px 20px;
     border: none;
     border-radius: 6px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: transform 0.1s;
     color: white;
 }
-button:active { transform: scale(0.98); }
+
 .add-btn { background-color: var(--primary); }
 .print-btn { background-color: var(--success); }
 .reset-btn { background-color: var(--danger); }
-.action-buttons { display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid #eee; padding-top: 15px; }
 
-/* --- OMR SHEET --- */
+/* --- OMR SHEET LAYOUT --- */
 .omr-container {
     background: white;
     width: 210mm; /* A4 Width */
-    min-height: 297mm; /* A4 Height */
+    min-height: 297mm;
     padding: 15mm;
     box-shadow: 0 0 20px rgba(0,0,0,0.1);
     box-sizing: border-box;
-    position: relative;
 }
 
 .omr-header {
-    border-bottom: 2px solid black;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    border-bottom: 3px solid black;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
 }
 
-.header-left h2 { margin: 0 0 10px 0; font-size: 24px; }
-.student-info p { margin: 5px 0; font-size: 14px; }
+.header-left h2 { margin: 0 0 10px 0; font-size: 26px; font-weight: 800; }
+.student-info p { margin: 5px 0; font-size: 14px; border-bottom: 1px solid #eee; }
 
-.instructions { font-size: 10px; border: 1px solid black; padding: 5px; border-radius: 4px; width: 220px; }
-.instructions ul { padding-left: 15px; margin: 5px 0; }
-.example-bubble { display: flex; align-items: center; gap: 5px; margin-top: 5px; font-weight: bold; }
+.instructions { 
+    font-size: 11px; 
+    border: 2px solid black; 
+    padding: 10px; 
+    width: 250px; 
+    line-height: 1.4;
+}
 
-/* Grid Layout */
+/* QUESTIONS GRID */
 .omr-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-content: flex-start;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns of questions */
+    gap: 20px;
 }
 
 .section-block {
-    width: 100%;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px dashed #ccc;
+    grid-column: span 2;
+    margin-top: 10px;
+    border-top: 1px solid #eee;
 }
 
 .section-title {
+    background: #000;
+    color: #fff;
+    padding: 5px 15px;
     font-size: 12px;
     font-weight: bold;
-    text-transform: uppercase;
-    background: #333;
-    color: white;
-    padding: 4px 8px;
     display: inline-block;
-    border-radius: 3px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
-.q-row { display: flex; align-items: center; margin-bottom: 6px; }
-.q-num { width: 35px; font-weight: bold; text-align: right; margin-right: 15px; font-size: 14px; }
-.options { display: flex; gap: 10px; align-items: center; }
+.q-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
 
-/* Bubbles */
+.q-num {
+    width: 35px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.options { display: flex; gap: 12px; align-items: center; }
+
+/* BUBBLES */
 .bubble {
     width: var(--bubble-size);
     height: var(--bubble-size);
-    border: 1px solid black;
+    border: 1.5px solid black;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 11px;
-    font-weight: 500;
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.1s;
-}
-
-.bubble:hover { background-color: #f0f0f0; }
-.bubble.filled { background-color: black; color: white; border-color: black; }
-
-/* Integer Input */
-.int-input {
-    width: 45px;
-    height: 30px;
-    text-align: center;
+    font-size: 12px;
     font-weight: bold;
-    border: 2px solid var(--accent);
-    margin-right: 15px;
-    background-color: #ebf5fb;
+    cursor: pointer;
 }
 
-/* Matrix */
-.matrix-container { display: flex; flex-direction: column; gap: 4px; }
-.matrix-row { display: flex; gap: 12px; align-items: center; }
-.matrix-label { font-weight: bold; font-size: 12px; width: 15px; }
+.bubble.filled {
+    background-color: black !important;
+    color: white !important;
+}
 
-/* Footer */
+/* INTEGER VALUE BOXES (No Bubbles) */
+.integer-box-container {
+    display: flex;
+    gap: 8px;
+}
+
+.int-box-input {
+    width: 35px;
+    height: 40px;
+    border: 2px solid black;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    outline: none;
+}
+
+.int-box-input:focus {
+    background-color: #f0f9ff;
+    border-color: var(--accent);
+}
+
+/* MATRIX STYLE */
+.matrix-container { display: flex; flex-direction: column; gap: 5px; }
+.matrix-row { display: flex; gap: 10px; align-items: center; }
+.matrix-label { font-weight: bold; width: 15px; font-size: 12px; }
+
+/* SIGNATURES */
 .omr-footer {
-    margin-top: 40px;
+    margin-top: 50px;
     display: flex;
     justify-content: space-between;
-    padding-top: 20px;
-}
-.signature-box {
-    border-top: 1px solid black;
-    width: 40%;
-    text-align: center;
-    padding-top: 5px;
-    font-size: 12px;
 }
 
-/* --- PRINT SETTINGS (CRUCIAL) --- */
+.signature-box {
+    border-top: 1.5px solid black;
+    width: 200px;
+    text-align: center;
+    padding-top: 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* --- PRINT LOGIC --- */
 @media print {
-    body { background: white; padding: 0; margin: 0; }
-    .no-print { display: none !important; } /* Hides Controls & Integer Input Box */
+    body { background: white; padding: 0; }
+    .no-print { display: none !important; }
     
     .omr-container {
         width: 100%;
         margin: 0;
         box-shadow: none;
-        padding: 0;
-        border: none;
+        padding: 5mm;
     }
 
-    /* Ensure bubbles print black */
     .bubble.filled {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
         background-color: black !important;
-        color: white !important;
     }
 
-    .section-title {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        background-color: #333 !important;
-        color: white !important;
+    .int-box-input {
+        border: 2px solid black !important;
     }
 }
