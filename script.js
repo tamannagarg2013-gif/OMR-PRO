@@ -1,6 +1,6 @@
 let questionCounter = 1;
 
-// Initialize Date
+// Initialize Header Data
 document.getElementById('displayDate').innerText = new Date().toLocaleDateString();
 
 // Sync Header Inputs
@@ -16,17 +16,12 @@ function addQuestions() {
     const count = parseInt(document.getElementById('qCount').value);
     const container = document.getElementById('omrGrid');
 
-    let sectionTitle = "";
-    if (type === 'single' || type === 'multi') sectionTitle = "Multiple Choice";
-    else if (type === 'integer') sectionTitle = "Integer Value (Type Below)";
-    else if (type === 'matrix') sectionTitle = "Matrix Match";
-
     const sectionBlock = document.createElement('div');
     sectionBlock.className = 'section-block';
     
     const titleDiv = document.createElement('div');
     titleDiv.className = 'section-title';
-    titleDiv.innerText = sectionTitle;
+    titleDiv.innerText = type === 'integer' ? "Numerical Value Section" : "Multiple Choice Section";
     sectionBlock.appendChild(titleDiv);
 
     for (let i = 0; i < count; i++) {
@@ -41,31 +36,35 @@ function addQuestions() {
         const optionsDiv = document.createElement('div');
         optionsDiv.className = 'options';
 
-        // --- NEW INTEGER LOGIC: BOXES INSTEAD OF BUBBLES ---
         if (type === 'integer') {
-            const integerBoxContainer = document.createElement('div');
-            integerBoxContainer.className = 'integer-box-container';
+            // Main input for the user to type the full number
+            const mainInput = document.createElement('input');
+            mainInput.type = 'number';
+            mainInput.className = 'main-int-input no-print';
+            mainInput.placeholder = "Type number...";
 
-            // Create 2 boxes (for tens and units)
-            for (let j = 0; j < 2; j++) {
-                const box = document.createElement('input');
-                box.type = 'text';
-                box.maxLength = 1;
-                box.className = 'int-box-input';
-                // Prevents printing the border-highlight when focused
-                box.placeholder = " "; 
+            // Container for the individual printed boxes
+            const boxContainer = document.createElement('div');
+            boxContainer.className = 'integer-box-container';
+
+            // Sync boxes with input
+            mainInput.addEventListener('input', function() {
+                boxContainer.innerHTML = ''; // Clear old boxes
+                const valStr = this.value.toString();
                 
-                // Logic: Auto-tab to next box
-                box.addEventListener('input', function() {
-                    if (this.value.length === 1 && j === 0) {
-                        integerBoxContainer.children[1].focus();
-                    }
-                });
-                integerBoxContainer.appendChild(box);
-            }
-            optionsDiv.appendChild(integerBoxContainer);
-        } 
-        else if (type === 'matrix') {
+                // Create a box for every digit typed
+                for (let char of valStr) {
+                    const box = document.createElement('div');
+                    box.className = 'int-box-display';
+                    box.innerText = char;
+                    boxContainer.appendChild(box);
+                }
+            });
+
+            optionsDiv.appendChild(mainInput);
+            optionsDiv.appendChild(boxContainer);
+
+        } else if (type === 'matrix') {
             const matrixContainer = document.createElement('div');
             matrixContainer.className = 'matrix-container';
             ['A', 'B', 'C', 'D'].forEach(rowLabel => {
@@ -80,7 +79,6 @@ function addQuestions() {
             });
             optionsDiv.appendChild(matrixContainer);
         } else {
-            // Standard A-D Bubbles
             ['A', 'B', 'C', 'D'].forEach(opt => optionsDiv.appendChild(createBubble(opt)));
         }
 
