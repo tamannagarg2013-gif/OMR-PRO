@@ -1,6 +1,5 @@
 let questionCounter = 1;
 
-// Initialize Header Data
 document.getElementById('displayDate').innerText = new Date().toLocaleDateString();
 
 // Sync Header Inputs
@@ -21,7 +20,13 @@ function addQuestions() {
     
     const titleDiv = document.createElement('div');
     titleDiv.className = 'section-title';
-    titleDiv.innerText = type === 'integer' ? "Numerical Value Section" : "Multiple Choice Section";
+    
+    // Labeling logic
+    if (type === 'single') titleDiv.innerText = "Section: Single Correct";
+    else if (type === 'multi') titleDiv.innerText = "Section: Multi Correct";
+    else if (type === 'integer') titleDiv.innerText = "Section: Numerical/Integer";
+    else titleDiv.innerText = "Section: Matrix Match";
+    
     sectionBlock.appendChild(titleDiv);
 
     for (let i = 0; i < count; i++) {
@@ -36,23 +41,19 @@ function addQuestions() {
         const optionsDiv = document.createElement('div');
         optionsDiv.className = 'options';
 
+        // --- INTEGER LOGIC (Unlimited digits) ---
         if (type === 'integer') {
-            // Main input for the user to type the full number
             const mainInput = document.createElement('input');
             mainInput.type = 'number';
             mainInput.className = 'main-int-input no-print';
-            mainInput.placeholder = "Type number...";
+            mainInput.placeholder = "Value";
 
-            // Container for the individual printed boxes
             const boxContainer = document.createElement('div');
             boxContainer.className = 'integer-box-container';
 
-            // Sync boxes with input
             mainInput.addEventListener('input', function() {
-                boxContainer.innerHTML = ''; // Clear old boxes
+                boxContainer.innerHTML = ''; 
                 const valStr = this.value.toString();
-                
-                // Create a box for every digit typed
                 for (let char of valStr) {
                     const box = document.createElement('div');
                     box.className = 'int-box-display';
@@ -63,8 +64,9 @@ function addQuestions() {
 
             optionsDiv.appendChild(mainInput);
             optionsDiv.appendChild(boxContainer);
-
-        } else if (type === 'matrix') {
+        } 
+        // --- MATRIX MATCH ---
+        else if (type === 'matrix') {
             const matrixContainer = document.createElement('div');
             matrixContainer.className = 'matrix-container';
             ['A', 'B', 'C', 'D'].forEach(rowLabel => {
@@ -78,7 +80,11 @@ function addQuestions() {
                 matrixContainer.appendChild(mRow);
             });
             optionsDiv.appendChild(matrixContainer);
-        } else {
+        } 
+        // --- SINGLE OR MULTI CORRECT ---
+        else {
+            // Note: In OMR, Single and Multi look identical (A,B,C,D). 
+            // The difference is just how the student fills them.
             ['A', 'B', 'C', 'D'].forEach(opt => optionsDiv.appendChild(createBubble(opt)));
         }
 
@@ -93,12 +99,14 @@ function createBubble(text) {
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
     bubble.innerText = text;
-    bubble.addEventListener('click', function() { this.classList.toggle('filled'); });
+    bubble.addEventListener('click', function() { 
+        this.classList.toggle('filled'); 
+    });
     return bubble;
 }
 
 function resetSheet() {
-    if(confirm("Clear sheet?")) {
+    if(confirm("Clear everything?")) {
         document.getElementById('omrGrid').innerHTML = '';
         questionCounter = 1;
     }
