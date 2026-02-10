@@ -1,61 +1,249 @@
-function addQuestions() {
-    const type = document.getElementById('qType').value;
-    const count = parseInt(document.getElementById('qCount').value);
-    const container = document.getElementById('omrGrid');
+/* --- UNIVERSAL STYLES --- */
+:root {
+    --primary: #2c3e50;
+    --accent: #3498db;
+    --danger: #e74c3c;
+    --success: #27ae60;
+    --bg: #f8f9fa;
+    --bubble-size: 26px;
+}
 
-    const sectionBlock = document.createElement('div');
-    sectionBlock.className = 'section-block';
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- CONTROL PANEL (UI ONLY) --- */
+.control-panel {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 850px;
+    margin-bottom: 30px;
+    border-top: 6px solid var(--accent);
+}
+
+.panel-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 180px;
+}
+
+.control-group label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+input, select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.1s, opacity 0.2s;
+}
+
+button:active { transform: scale(0.98); }
+.add-btn { background-color: var(--primary); }
+.print-btn { background-color: var(--success); }
+.reset-btn { background-color: var(--danger); }
+
+/* --- OMR SHEET (A4 Standard) --- */
+.omr-container {
+    background: white;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm;
+    box-sizing: border-box;
+    box-shadow: 0 0 30px rgba(0,0,0,0.1);
+}
+
+.omr-header {
+    border-bottom: 3px solid #000;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.header-left h2 { margin: 0 0 10px 0; font-size: 28px; font-weight: 900; }
+.student-info p { margin: 10px 0; font-size: 15px; border-bottom: 1px solid #ddd; min-width: 300px; }
+
+.instructions {
+    border: 2px solid #000;
+    padding: 12px;
+    font-size: 11px;
+    width: 280px;
+    line-height: 1.4;
+    background: #fff;
+}
+
+/* --- GRID SYSTEM --- */
+.omr-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    column-gap: 50px;
+}
+
+.section-block {
+    grid-column: span 2;
+    margin-top: 25px;
+    border-top: 1px solid #000;
+    padding-top: 10px;
+}
+
+.section-title {
+    background: #000;
+    color: #fff;
+    padding: 5px 15px;
+    font-size: 13px;
+    font-weight: 800;
+    display: inline-block;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.q-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.q-num {
+    width: 40px;
+    font-weight: 800;
+    font-size: 15px;
+}
+
+.options {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* --- BUBBLES --- */
+.bubble {
+    width: var(--bubble-size);
+    height: var(--bubble-size);
+    border: 2px solid #000;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.bubble.filled {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+/* --- DYNAMIC INTEGER / NUMERICAL BOXES --- */
+.main-int-input {
+    width: 70px;
+    border: 2px solid var(--accent);
+    padding: 5px;
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.integer-box-container {
+    display: flex;
+    gap: 6px;
+}
+
+.int-box-display {
+    width: 34px;
+    height: 42px;
+    border: 2px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 900;
+    font-family: 'Courier New', Courier, monospace;
+    background: #fff;
+}
+
+/* --- MATRIX MATCH LAYOUT --- */
+.matrix-container { display: flex; flex-direction: column; gap: 6px; }
+.matrix-row { display: flex; gap: 10px; align-items: center; }
+.matrix-label { font-weight: 900; width: 15px; font-size: 13px; }
+
+/* --- FOOTER --- */
+.omr-footer {
+    margin-top: 80px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.signature-box {
+    border-top: 2px solid #000;
+    width: 240px;
+    text-align: center;
+    padding-top: 8px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* --- PRINTING OPTIMIZATION --- */
+@media print {
+    @page { size: A4; margin: 0; }
+    body { background: white; padding: 0; }
+    .no-print, .control-panel, .main-int-input { display: none !important; }
     
-    const titleDiv = document.createElement('div');
-    titleDiv.className = 'section-title';
-    titleDiv.innerText = type.toUpperCase() + " SECTION";
-    sectionBlock.appendChild(titleDiv);
-
-    for (let i = 0; i < count; i++) {
-        const row = document.createElement('div');
-        row.className = 'q-row'; // This is the horizontal row
-
-        const numSpan = document.createElement('div');
-        numSpan.className = 'q-num';
-        numSpan.innerText = questionCounter + ".";
-        row.appendChild(numSpan);
-
-        const optionsDiv = document.createElement('div');
-        optionsDiv.className = 'options-wrapper'; // This holds options horizontally
-
-        if (type === 'integer') {
-            const mainInput = document.createElement('input');
-            mainInput.type = 'number';
-            mainInput.className = 'no-print';
-            mainInput.style.width = '50px';
-            
-            const boxContainer = document.createElement('div');
-            boxContainer.className = 'integer-box-container';
-
-            mainInput.oninput = function() {
-                boxContainer.innerHTML = '';
-                for (let char of this.value) {
-                    const box = document.createElement('div');
-                    box.className = 'int-box-display';
-                    box.innerText = char;
-                    boxContainer.appendChild(box);
-                }
-            };
-            optionsDiv.appendChild(mainInput);
-            optionsDiv.appendChild(boxContainer);
-        } else {
-            ['A', 'B', 'C', 'D'].forEach(opt => {
-                const b = document.createElement('div');
-                b.className = 'bubble';
-                b.innerText = opt;
-                b.onclick = function() { this.classList.toggle('filled'); };
-                optionsDiv.appendChild(b);
-            });
-        }
-
-        row.appendChild(optionsDiv);
-        sectionBlock.appendChild(row);
-        questionCounter++;
+    .omr-container {
+        width: 100%;
+        box-shadow: none;
+        padding: 10mm;
     }
-    container.appendChild(sectionBlock);
+
+    .bubble, .int-box-display {
+        border: 2px solid #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .bubble.filled {
+        background-color: #000 !important;
+        color: #fff !important;
+    }
 }
