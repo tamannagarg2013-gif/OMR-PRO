@@ -1,113 +1,250 @@
+/* --- DESIGN TOKENS --- */
 :root {
-    --academic-blue: #1a5276;
-    --gold: #d4ac0d;
-    --soft-gray: #f4f7f6;
-    --bubble-border: #2c3e50;
-    --success: #229954;
-    --danger: #cb4335;
+    --primary-blue: #1a5276;
+    --accent-orange: #d35400;
+    --success-green: #27ae60;
+    --danger-red: #c0392b;
+    --bubble-size: 25px;
+    --border-dark: #000000;
 }
 
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #e5e7e9 0%, #f4f7f6 100%);
-    margin: 0; padding: 20px;
-    display: flex; flex-direction: column; align-items: center;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* --- COLORFUL UI PANEL --- */
+/* --- CONTROL PANEL (MODERN UI) --- */
 .control-panel {
-    background: white;
+    background: #ffffff;
     padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    width: 100%; max-width: 900px;
-    border-left: 8px solid var(--academic-blue);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 900px;
     margin-bottom: 30px;
+    border-top: 6px solid var(--primary-blue);
 }
+
+.panel-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 160px;
+}
+
+.control-group label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #555;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+input, select {
+    padding: 10px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus { border-color: var(--primary-blue); }
 
 .action-buttons {
-    display: flex; gap: 15px; margin-top: 20px;
+    display: flex;
+    gap: 12px;
 }
 
 button {
-    padding: 12px 25px; border: none; border-radius: 8px;
-    font-weight: bold; cursor: pointer; color: white;
-    transition: all 0.3s ease;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.1s;
 }
 
-.add-btn { background: var(--academic-blue); }
-.print-btn { background: var(--success); }
-.reset-btn { background: var(--danger); }
-button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+button:active { transform: scale(0.96); }
+.add-btn { background: var(--primary-blue); }
+.print-btn { background: var(--success-green); }
+.reset-btn { background: var(--danger-red); }
 
-/* --- OMR SHEET DESIGN --- */
+/* --- OMR SHEET (A4) --- */
 .omr-container {
-    background: white;
-    width: 210mm; min-height: 297mm;
-    padding: 12mm; box-sizing: border-box;
-    position: relative; border: 1px solid #ddd;
+    background: #ffffff;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm;
+    box-sizing: border-box;
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
 }
 
 .omr-header {
-    display: flex; justify-content: space-between;
-    border-bottom: 4px double black;
-    padding-bottom: 20px; margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 3px solid var(--border-dark);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
 }
+
+.header-left h2 { margin: 0 0 10px 0; color: var(--primary-blue); font-size: 26px; }
+.student-info p { margin: 5px 0; font-weight: bold; font-size: 14px; border-bottom: 1px solid #eee; }
 
 /* ROLL NUMBER GRID */
 .roll-section {
-    display: flex; flex-direction: column; align-items: center;
-    border: 2px solid black; padding: 10px; border-radius: 5px;
-}
-.roll-section h4 { margin: 0 0 10px 0; font-size: 12px; }
-.roll-grid { display: flex; gap: 5px; }
-.roll-col { display: flex; flex-direction: column; gap: 3px; }
-.roll-bubble { 
-    width: 18px !important; height: 18px !important; 
-    font-size: 9px !important; border-width: 1px !important; 
+    border: 2px solid var(--border-dark);
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
 }
 
-/* QUESTIONS & SECTIONS */
-.omr-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 30px; }
+.roll-grid {
+    display: flex;
+    gap: 4px;
+    margin-top: 5px;
+}
 
-.section-block { grid-column: span 2; margin-top: 25px; border-radius: 5px; }
+.roll-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.roll-bubble {
+    width: 18px !important;
+    height: 18px !important;
+    font-size: 9px !important;
+    border: 1px solid var(--border-dark) !important;
+}
+
+/* --- HORIZONTAL QUESTION ROWS --- */
+.omr-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns of questions */
+    column-gap: 40px;
+}
+
+.section-block {
+    grid-column: span 2;
+    margin-top: 20px;
+}
 
 .section-title {
-    padding: 6px 20px; color: white; font-weight: bold;
-    font-size: 14px; text-transform: uppercase; margin-bottom: 15px;
-    clip-path: polygon(0% 0%, 95% 0%, 100% 50%, 95% 100%, 0% 100%);
+    padding: 5px 15px;
+    color: white;
+    font-weight: 800;
+    font-size: 13px;
+    display: inline-block;
+    margin-bottom: 15px;
+    border-radius: 0 15px 15px 0;
 }
 
-/* Color Coding Sections */
+/* Section Colors */
 .section-single .section-title { background: #2980b9; }
 .section-multi .section-title { background: #8e44ad; }
-.section-integer .section-title { background: #d35400; }
+.section-integer .section-title { background: #e67e22; }
 .section-matrix .section-title { background: #2c3e50; }
 
-.q-row { display: flex; align-items: center; margin-bottom: 8px; }
-.q-num { width: 30px; font-weight: 800; color: var(--academic-blue); }
+.q-row {
+    display: flex;
+    flex-direction: row; /* Horizontal alignment */
+    align-items: center;
+    margin-bottom: 12px;
+}
 
+.q-num {
+    width: 35px;
+    font-weight: 900;
+    font-size: 14px;
+    color: #333;
+}
+
+.options-wrapper {
+    display: flex;
+    flex-direction: row; /* Circles stay horizontal */
+    gap: 12px;
+    align-items: center;
+}
+
+/* BUBBLES */
 .bubble {
-    width: 24px; height: 24px; border: 2px solid black;
-    border-radius: 50%; display: flex; justify-content: center;
-    align-items: center; font-size: 11px; font-weight: bold;
-    cursor: pointer; transition: 0.2s;
+    width: var(--bubble-size);
+    height: var(--bubble-size);
+    border: 2px solid var(--border-dark);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #fff;
 }
 
-.bubble.filled { background: black !important; color: white !important; }
+.bubble.filled {
+    background-color: #000 !important;
+    color: #fff !important;
+}
 
-/* INTEGER BOXES */
+/* INTEGER BOXES (Horizontal) */
+.integer-box-container {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
 .int-box-display {
-    width: 30px; height: 35px; border: 2px solid black;
-    display: flex; justify-content: center; align-items: center;
-    font-size: 20px; font-weight: bold; font-family: monospace;
+    width: 32px;
+    height: 38px;
+    border: 2px solid var(--border-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
 }
 
-/* --- PRINTING --- */
+.main-int-input {
+    width: 65px;
+    margin-right: 15px;
+    border: 1px dashed var(--primary-blue);
+}
+
+/* --- PRINT OPTIMIZATION --- */
 @media print {
-    body { background: none; padding: 0; }
-    .no-print, .control-panel { display: none !important; }
-    .omr-container { width: 100%; box-shadow: none; border: none; }
-    .section-title { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .bubble.filled { background: black !important; }
+    body { background: white; padding: 0; }
+    .no-print, .control-panel, .main-int-input { display: none !important; }
+    
+    .omr-container {
+        width: 100%;
+        margin: 0;
+        box-shadow: none;
+        padding: 5mm;
+    }
+
+    .bubble.filled {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background-color: #000 !important;
+    }
+    
+    .section-title {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
 }
